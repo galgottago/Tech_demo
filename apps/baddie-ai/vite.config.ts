@@ -4,8 +4,13 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// GitHub Pages project site: https://<owner>.github.io/<repo>/baddie-ai/
+// CI sets VITE_BASE to /<repo>/baddie-ai/. Local dev leaves it unset so the app stays at /.
+const base = process.env.VITE_BASE ?? '/'
+
 // https://vite.dev/config/
 export default defineConfig({
+  base,
   plugins: [
     react(),
     tailwindcss(),
@@ -16,6 +21,9 @@ export default defineConfig({
         name: 'Baddie AI',
         short_name: 'Baddie AI',
         description: 'Chat with an LLM running fully in your browser, offline.',
+        // Must match the Vite base so the installed PWA opens the Pages path.
+        start_url: base,
+        scope: base,
         theme_color: '#0a0a0a',
         background_color: '#0a0a0a',
         display: 'standalone',

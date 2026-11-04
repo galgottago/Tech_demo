@@ -1,0 +1,64 @@
+name: Deploy Baddie AI
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+
+      - name: Install
+        working-directory: apps/baddie-ai
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        working-directory: apps/baddie-ai
+        env:
+          # Project Pages serves the repo at /<repo>/. The app lives one level down.
+          VITE_BASE: /${{ github.event.repository.name }}/baddie-ai/
+        run: bun run build
+
+      - name: Assemble Pages site
+        run: |
+          mkdir -p _site/baddie-ai
+          cp -a apps/baddie-ai/dist/. _site/baddie-ai/
+          cat > _site/index.html <<'EOF'
+          <!doctype html>
+          <meta http-equiv="refresh" content="0; url=./baddie-ai/">
+          <p><a href="./baddie-ai/">Baddie AI</a></p>
+          EOF
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

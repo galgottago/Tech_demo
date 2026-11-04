@@ -13,6 +13,8 @@ Open the printed URL in Chrome (desktop or Android). Pick a model (the smallest 
 
 `bun run build && bun run preview` serves the production build with the service worker. Use that to test offline loads, install, and the "Update available" toast.
 
+On a phone, open the GitHub Pages build (HTTPS, which WebGPU requires): `https://galgottago.github.io/Tech_demo/baddie-ai/`. That URL is published by `.github/workflows/deploy-baddie-ai.yml`. Local `bun run dev` stays at `/`; the Pages build sets `VITE_BASE=/Tech_demo/baddie-ai/`, and the PWA `scope` and `start_url` use that same path.
+
 ## How it works
 
 - `src/lib/llm/` — **reusable, UI-free engine**. `ChatEngine` wraps WebLLM in a Web Worker: `load` (with progress), streaming `chat`, `abort`, `reset`, `dispose`. Pass a `ToolRegistry` to reserve a tools/function-calling slot for a host app (handlers are not invoked yet — see `PLAN.md`).
