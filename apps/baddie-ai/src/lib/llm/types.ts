@@ -17,4 +17,6 @@ export interface ModelOption {
   label: string
   /** Approximate VRAM needed at runtime, in MB. */
   vramMB: number
+  /** True when the model needs the `shader-f16` WebGPU feature. */
+  requiresF16: boolean
 }

@@ -1,4 +1,5 @@
 import { WebWorkerMLCEngine } from '@mlc-ai/web-llm'
+import { ToolRegistry } from './tools'
 import type { ChatMessage, LoadProgress } from './types'
 
 /**
@@ -7,15 +8,37 @@ import type { ChatMessage, LoadProgress } from './types'
  * Model weights are downloaded once and cached by the browser (Cache API),
  * so subsequent loads work fully offline. This module has no UI
  * dependencies and can be reused in other products as-is.
+ *
+ * A host app may pass a ToolRegistry so the engine can later expose
+ * tools/function-calling (e.g. BACnet data lookups) to the model. The
+ * execution loop is not implemented yet — see PLAN.md "Deferred".
  */
 export class ChatEngine {
+  readonly tools: ToolRegistry
   private engine: WebWorkerMLCEngine | null = null
   private loadedModelId: string | null = null
   private onProgress: ((p: LoadProgress) => void) | null = null
 
+  constructor(tools: ToolRegistry = new ToolRegistry()) {
+    this.tools = tools
+  }
+
   /** WebGPU is required to run the model. */
   static isWebGPUAvailable(): boolean {
     return typeof navigator !== 'undefined' && 'gpu' in navigator
+  }
+
+  /** Whether the GPU supports `shader-f16` (needed by q4f16 models). */
+  static async supportsF16(): Promise<boolean> {
+    if (!ChatEngine.isWebGPUAvailable()) return false
+    try {
+      const adapter = await (
+        navigator as Navigator & { gpu: { requestAdapter(): Promise<{ features: Set<string> } | null> } }
+      ).gpu.requestAdapter()
+      return adapter?.features.has('shader-f16') ?? false
+    } catch {
+      return false
+    }
   }
 
   get currentModelId(): string | null {

@@ -10,11 +10,11 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['icon.svg'],
       manifest: {
-        name: 'Offline AI Chat',
-        short_name: 'AI Chat',
+        name: 'Baddie AI',
+        short_name: 'Baddie AI',
         description: 'Chat with an LLM running fully in your browser, offline.',
         theme_color: '#0a0a0a',
         background_color: '#0a0a0a',
@@ -48,7 +48,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(import.meta.dirname, './src'),
     },
   },
 })
