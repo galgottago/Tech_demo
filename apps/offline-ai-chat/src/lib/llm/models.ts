@@ -11,6 +11,12 @@ export const MODEL_OPTIONS: ModelOption[] = [
     vramMB: 376,
   },
   {
+    // q4f32 needs no shader-f16 support; works on GPUs/drivers without f16.
+    id: 'SmolLM2-360M-Instruct-q4f32_1-MLC',
+    label: 'SmolLM2 360M (f32, max compatibility)',
+    vramMB: 580,
+  },
+  {
     id: 'Llama-3.2-1B-Instruct-q4f16_1-MLC',
     label: 'Llama 3.2 1B',
     vramMB: 879,
