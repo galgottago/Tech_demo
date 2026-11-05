@@ -1,4 +1,4 @@
-name: Deploy Baddie AI
+name: Deploy demos
 
 on:
   push:
@@ -26,25 +26,80 @@ jobs:
         with:
           bun-version: 1.4.4
 
-      - name: Install
+      - name: Install Baddie AI
         working-directory: apps/baddie-ai
         run: bun install --frozen-lockfile
 
-      - name: Build
+      - name: Build Baddie AI
         working-directory: apps/baddie-ai
         env:
           # Project Pages serves the repo at /<repo>/. The app lives one level down.
           VITE_BASE: /${{ github.event.repository.name }}/baddie-ai/
         run: bun run build
 
+      - name: Install scroll-3d-building
+        working-directory: apps/scroll-3d-building
+        run: bun install --frozen-lockfile
+
+      - name: Build scroll-3d-building
+        working-directory: apps/scroll-3d-building
+        env:
+          # Project Pages serves the repo at /<repo>/. The app lives one level down.
+          VITE_BASE: /${{ github.event.repository.name }}/scroll-3d-building/
+        run: bun run build
+
       - name: Assemble Pages site
         run: |
-          mkdir -p _site/baddie-ai
+          mkdir -p _site/baddie-ai _site/scroll-3d-building
           cp -a apps/baddie-ai/dist/. _site/baddie-ai/
+          cp -a apps/scroll-3d-building/dist/. _site/scroll-3d-building/
           cat > _site/index.html <<'EOF'
           <!doctype html>
-          <meta http-equiv="refresh" content="0; url=./baddie-ai/">
-          <p><a href="./baddie-ai/">Baddie AI</a></p>
+          <html lang="en">
+          <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <title>Tech demos</title>
+          <style>
+            :root { color-scheme: dark; }
+            body {
+              margin: 0;
+              min-height: 100vh;
+              font: 16px/1.45 system-ui, sans-serif;
+              background: #0c1218;
+              color: #e7eef4;
+              display: grid;
+              place-items: center;
+            }
+            main { width: min(640px, calc(100% - 32px)); }
+            h1 { font-size: 1.4rem; font-weight: 560; letter-spacing: -0.02em; margin: 0 0 8px; }
+            p.lead { margin: 0 0 24px; color: #9aafbe; }
+            ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+            a {
+              display: block;
+              padding: 16px 18px;
+              border: 1px solid #243440;
+              border-radius: 12px;
+              color: inherit;
+              text-decoration: none;
+              background: #121a22;
+            }
+            a:hover { border-color: #3d6378; }
+            strong { display: block; font-size: 1.05rem; }
+            span { color: #9aafbe; font-size: 0.92rem; }
+          </style>
+          </head>
+          <body>
+          <main>
+            <h1>Tech demos</h1>
+            <p class="lead">Small self-contained experiments.</p>
+            <ul>
+              <li><a href="./baddie-ai/"><strong>Baddie AI</strong><span>Offline chat in the browser</span></a></li>
+              <li><a href="./scroll-3d-building/"><strong>Scroll 3D building</strong><span>Floor plan to mechanical room</span></a></li>
+            </ul>
+          </main>
+          </body>
+          </html>
           EOF
 
       - name: Upload Pages artifact
