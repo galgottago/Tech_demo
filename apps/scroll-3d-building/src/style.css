@@ -1,0 +1,239 @@
+:root {
+  color-scheme: dark;
+  --ink: #e8f4fb;
+  --muted: #b7c9d4;
+  --line: rgba(155, 231, 255, 0.38);
+  --amber: #e3a23a;
+  --panel: rgba(7, 16, 24, 0.62);
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: #071018;
+  overflow-x: hidden;
+}
+
+html {
+  overscroll-behavior: none;
+  touch-action: pan-y;
+}
+
+#webgl {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#labels {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+#scroll-space {
+  height: 500vh;
+  position: relative;
+  z-index: 0;
+}
+
+#hud {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  padding:
+    max(16px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+  color: var(--ink);
+}
+
+#hud header,
+#hud footer,
+#steps {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+}
+
+#hud header {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
+  padding: 10px 14px 12px;
+  max-width: min(280px, calc(100vw - 168px));
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+#phase {
+  margin: 2px 0 0;
+  font-size: 26px;
+  font-weight: 560;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+#steps {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  display: flex;
+  gap: 0;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+}
+
+#steps li {
+  padding: 6px 8px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(183, 201, 212, 0.55);
+}
+
+#steps li.on {
+  color: #071018;
+  background: var(--amber);
+}
+
+#steps li.done {
+  color: #d7f6ff;
+}
+
+#hud footer {
+  position: absolute;
+  left: max(16px, env(safe-area-inset-left));
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  padding: 10px 12px 8px;
+}
+
+#hint {
+  margin: 0 0 8px;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+#bar {
+  height: 2px;
+  background: rgba(155, 231, 255, 0.18);
+}
+
+#bar-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: var(--amber);
+}
+
+.tag {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 96px;
+  padding: 6px 9px 7px;
+  background: rgba(8, 14, 20, 0.84);
+  border: 1px solid rgba(155, 231, 255, 0.42);
+  border-left: 3px solid var(--amber);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+  user-select: none;
+}
+
+.tag .code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: #f4fbff;
+}
+
+.tag .name {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #b7c9d6;
+}
+
+.room {
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #e7f9ff;
+  text-shadow: 0 0 14px rgba(90, 200, 230, 0.55);
+  pointer-events: none;
+  user-select: none;
+}
+
+#fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  background: #071018;
+  color: var(--ink);
+}
+
+#fallback[hidden] {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  #phase {
+    font-size: 22px;
+  }
+
+  #hud header {
+    padding: 8px 10px 10px;
+    max-width: min(210px, calc(100vw - 150px));
+  }
+
+  #steps li {
+    padding: 6px 5px;
+    letter-spacing: 0.08em;
+  }
+
+  #hint {
+    font-size: 13px;
+  }
+
+  .tag {
+    min-width: 0;
+    padding: 4px 7px 5px;
+  }
+
+  .tag .code {
+    font-size: 11px;
+  }
+
+  .room {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+  }
+}

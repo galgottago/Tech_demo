@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#071018" />
+    <meta
+      name="description"
+      content="Scroll a commercial floor plan up into a 3D building and into the mechanical room."
+    />
+    <title>Annex 01 — Scroll building</title>
+  </head>
+  <body>
+    <canvas id="webgl"></canvas>
+    <div id="hud">
+      <header>
+        <p class="eyebrow">Annex 01 · Level 01</p>
+        <h1 id="phase">Floor plan</h1>
+      </header>
+      <ol id="steps">
+        <li data-step="0">Plan</li>
+        <li data-step="1">Rise</li>
+        <li data-step="2">Enter</li>
+        <li data-step="3">Tags</li>
+      </ol>
+      <footer>
+        <p id="hint">Scroll to extrude the plan</p>
+        <div id="bar" aria-hidden="true"><span id="bar-fill"></span></div>
+      </footer>
+    </div>
+    <div id="scroll-space" aria-hidden="true"></div>
+    <p id="fallback" hidden>WebGL is not available in this browser.</p>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
